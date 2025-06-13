@@ -4,18 +4,24 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 // Group groups alerts by any field using reflection
 func (alerts Alerts) Group(field string) map[string]Alerts {
 	grouped := make(map[string]Alerts)
 
+	// Create title caser for proper field name capitalization
+	caser := cases.Title(language.English)
+
 	for _, alert := range alerts.Alerts {
 		var key string
 
 		// Use reflection to get the field value
 		alertValue := reflect.ValueOf(alert)
-		fieldValue := alertValue.FieldByName(strings.Title(field))
+		fieldValue := alertValue.FieldByName(caser.String(field))
 
 		if !fieldValue.IsValid() {
 			// If field doesn't exist, skip this alert
@@ -68,6 +74,7 @@ func prettyPrintGrouped(grouped map[string]Alerts, groupName string) {
 
 // PrettyPrintGroupedBy groups alerts by the specified field and prints them
 func (alerts Alerts) PrettyPrintGroupedBy(field string) {
+	caser := cases.Title(language.English)
 	grouped := alerts.Group(field)
-	prettyPrintGrouped(grouped, strings.Title(field))
+	prettyPrintGrouped(grouped, caser.String(field))
 }
