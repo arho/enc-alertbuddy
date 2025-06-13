@@ -135,6 +135,6 @@ FEATURES:
 
 # Assingment notes
 
-In addition to the required functions, the program was wrapped with a CLI tool, tests were added, and a CI pipeline is also added.
+In addition to the required functions, the program was wrapped with a CLI tool, security checks with CodeQL, tests were added, and a CI pipeline is also added.
 
 Boilerplate code is generated with  Claude, most of the formatting, wrapping and CLI code is also generated with that. Function code testing, weird decisions, and the obsession with overcomplexity was corrected manually, and most of the deprecated code was also replaced with current packages, best practices etc.
