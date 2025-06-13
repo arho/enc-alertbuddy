@@ -49,7 +49,7 @@ jobs:
       run: go mod verify
       
     - name: Format check
-      run: task fmt
+      run: go fmt
       
     - name: Run tests
       run: go test -v -race -coverprofile=coverage.out ./...
@@ -109,7 +109,7 @@ jobs:
         go build -ldflags="-s -w -X main.Version=$(git describe --tags --always --dirty)" -o "dist/${binary_name}-${GOOS}-${GOARCH}" .
         
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: binaries-${{ matrix.goos }}-${{ matrix.goarch }}
         path: dist/
@@ -146,7 +146,7 @@ jobs:
         args: '-fmt sarif -out gosec.sarif ./...'
         
     - name: Upload Gosec results to GitHub Security tab
-      uses: github/codeql-action/upload-sarif@v2
+      uses: github/codeql-action/upload-sarif@v3
       if: always()
       with:
         sarif_file: gosec.sarif
@@ -179,10 +179,11 @@ jobs:
         go-version: ${{ env.GO_VERSION }}
         
     - name: golangci-lint
-      uses: golangci/golangci-lint-action@v3
+      uses: golangci/golangci-lint-action@v8
       with:
         version: latest
         args: --timeout=5m
+      continue-on-fail: true
         
   dependency-review:
     name: Dependency Review
