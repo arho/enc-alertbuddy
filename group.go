@@ -49,7 +49,7 @@ func (alerts Alerts) Group(field string) map[string]Alerts {
 }
 
 // PrettyPrintGrouped prints grouped alerts in a nice format
-func PrettyPrintGrouped(grouped map[string]Alerts, groupName string) {
+func prettyPrintGrouped(grouped map[string]Alerts, groupName string) {
 	fmt.Printf("📊 Alerts grouped by %s:\n", groupName)
 	fmt.Println(strings.Repeat("=", 60))
 
@@ -64,4 +64,10 @@ func PrettyPrintGrouped(grouped map[string]Alerts, groupName string) {
 	}
 
 	fmt.Printf("\n📈 Total groups: %d\n", len(grouped))
+}
+
+// PrettyPrintGroupedBy groups alerts by the specified field and prints them
+func (alerts Alerts) PrettyPrintGroupedBy(field string) {
+	grouped := alerts.Group(field)
+	prettyPrintGrouped(grouped, strings.Title(field))
 }
