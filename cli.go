@@ -19,6 +19,7 @@ type Config struct {
 	LastMinutes int
 	ShowVersion bool
 	ShowHelp    bool
+	ShowAll     bool
 }
 
 func parseFlags() (*Config, error) {
@@ -29,6 +30,8 @@ func parseFlags() (*Config, error) {
 	flag.StringVar(&config.InputFile, "input", "", "Input JSON file containing alerts")
 	flag.StringVar(&config.GroupBy, "groupby", "", "Group alerts by field (severity, service, component, metric, etc.)")
 	flag.IntVar(&config.LastMinutes, "lastminutes", 0, "Filter alerts from the last N minutes")
+	flag.BoolVar(&config.ShowAll, "show-all", false, "Show all alerts in detailed format")
+	flag.BoolVar(&config.ShowAll, "a", false, "Show all alerts in detailed format")
 	flag.BoolVar(&config.ShowVersion, "version", false, "Show version information")
 	flag.BoolVar(&config.ShowVersion, "v", false, "Show version information")
 	flag.BoolVar(&config.ShowHelp, "help", false, "Show help information")
@@ -97,15 +100,19 @@ func showHelp() {
 	fmt.Println("\nOPTIONAL FLAGS:")
 	fmt.Println("  --groupby <field>      Group alerts by field (severity, service, component, metric, threshold, value, priority)")
 	fmt.Println("  --lastminutes <n>      Filter alerts from the last N minutes")
+	fmt.Println("  --show-all, -a         Show all alerts in detailed format")
 	fmt.Println("  -v, --version          Show version information")
 	fmt.Println("  -h, --help             Show this help message")
 	
 	fmt.Println("\nEXAMPLES:")
 	fmt.Printf("  %s -i alerts.json\n", AppName)
+	fmt.Printf("  %s -i alerts.json --show-all\n", AppName)
+	fmt.Printf("  %s -i alerts.json -a\n", AppName)
 	fmt.Printf("  %s -i alerts.json --groupby=severity\n", AppName)
 	fmt.Printf("  %s -i alerts.json --groupby severity\n", AppName)
 	fmt.Printf("  %s -i alerts.json --lastminutes=30\n", AppName)
 	fmt.Printf("  %s -i alerts.json --groupby=service --lastminutes=60\n", AppName)
+	fmt.Printf("  %s -i alerts.json --show-all --lastminutes=30\n", AppName)
 	
 	fmt.Println("\nVALID GROUPBY FIELDS:")
 	fmt.Println("  severity    - Group by alert severity (critical, warning, info)")
@@ -120,6 +127,7 @@ func showHelp() {
 	fmt.Println("  • Automatic priority calculation based on severity, deviation, and affected components")
 	fmt.Println("  • Time-based filtering to focus on recent alerts")
 	fmt.Println("  • Flexible grouping by any alert field")
+	fmt.Println("  • Show all alerts in detailed format with --show-all")
 	fmt.Println("  • Beautiful formatted output for better readability")
 	fmt.Println("  • Support for large alert datasets")
 }
@@ -184,6 +192,10 @@ func processAlerts(alerts *Alerts, config *Config) {
 	if config.GroupBy != "" {
 		fmt.Printf("📋 Grouping alerts by: %s\n", config.GroupBy)
 		alerts.PrettyPrintGroupedBy(config.GroupBy)
+	} else if config.ShowAll {
+		// Show all alerts in detailed format
+		fmt.Printf("📋 Showing all %d alerts in detailed format:\n", len(alerts.Alerts))
+		alerts.PrettyPrint()
 	} else {
 		// Show top 10 highest priority alerts
 		maxDisplay := 10
@@ -206,7 +218,7 @@ func processAlerts(alerts *Alerts, config *Config) {
 		}
 		
 		if len(alerts.Alerts) > maxDisplay {
-			fmt.Printf("\n... and %d more alerts (use --groupby to see all organized)\n", 
+			fmt.Printf("\n... and %d more alerts (use --show-all to see all or --groupby to organize)\n", 
 				len(alerts.Alerts)-maxDisplay)
 		}
 		
