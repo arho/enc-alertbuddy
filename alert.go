@@ -1,5 +1,7 @@
 package main
+
 import "time"
+
 // Alerts represents a collection of alerts
 type Alerts struct {
 	Alerts []Alert `json:"alerts"`
