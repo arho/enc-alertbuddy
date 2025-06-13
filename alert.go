@@ -18,4 +18,5 @@ type Alert struct {
 	Value       float64   `json:"value"`
 	Threshold   float64   `json:"threshold"`
 	Description string    `json:"description"`
+	Priority float64 // Calculated field, not read from incoming JSON
 }
