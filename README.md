@@ -133,7 +133,7 @@ FEATURES:
 ```
 
 
-# Assingment notes
+# Assignment notes
 
 In addition to the required functions, the program was wrapped with a CLI tool, security checks with CodeQL, tests were added, and a CI pipeline is also added.
 
