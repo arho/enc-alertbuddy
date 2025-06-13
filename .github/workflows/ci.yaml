@@ -183,7 +183,7 @@ jobs:
       with:
         version: latest
         args: --timeout=5m
-      continue-on-fail: true
+      continue-on-error: true
         
   dependency-review:
     name: Dependency Review
