@@ -5,11 +5,13 @@ import (
 	"strings"
 )
 
+// PrettyPrint formats and prints a single alert
 func (alert Alert) PrettyPrint() {
 	fmt.Printf("┌─ Alert: %s ─┐\n", alert.ID)
 	fmt.Printf("│ Service:     %s\n", alert.Service)
 	fmt.Printf("│ Component:   %s\n", alert.Component)
 	fmt.Printf("│ Severity:    %s\n", alert.Severity)
+	fmt.Printf("│ Priority:    %.2f\n", alert.Priority)
 	fmt.Printf("│ Metric:      %s\n", alert.Metric)
 	fmt.Printf("│ Value:       %.2f (threshold: %.2f)\n", alert.Value, alert.Threshold)
 	fmt.Printf("│ Time:        %s\n", alert.Timestamp.Format("2006-01-02 15:04:05"))
